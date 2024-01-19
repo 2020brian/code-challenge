@@ -57,6 +57,53 @@ def update_power(power_id):
             return jsonify({"errors": [str(e)]}), 400
     else:
         return jsonify({"error": "Power not found"}), 404
+    
+
+@app.route('/hero_powers', methods=['POST'])
+def create_hero_power():
+    try:
+        data = request.get_json()
+
+        required_fields = ['strength', 'power_id', 'hero_id']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"errors": [f"{field} is required"]}), 400
+
+    
+        allowed_strengths = ['Strong', 'Weak', 'Average']
+        if data['strength'] not in allowed_strengths:
+            return jsonify({"errors": [f"Invalid strength value. Allowed values are {', '.join(allowed_strengths)}"]}), 400
+
+        
+        power = Powers.query.get(data['power_id'])
+        hero = Hero.query.get(data['hero_id'])
+        if not power or not hero:
+            return jsonify({"errors": ["Power or Hero not found"]}), 404
+
+    
+        hero_power = HeroPowers(
+            strength=data['strength'],
+            hero=hero,
+            power=power
+        )
+
+        db.session.add(hero_power)
+        db.session.commit()
+
+        formatted_hero = {
+            "id": hero.id,
+            "name": hero.name,
+            "super_name": hero.super_name,
+            "powers": [
+                {"id": p.id, "name": p.name, "description": p.description}
+                for p in hero.hero_powers
+            ]
+        }
+
+        return jsonify(formatted_hero), 201  # HTTP status code 201 indicates resource creation success
+    except ValueError as e:
+        return jsonify({"errors": [str(e)]}), 400
+
 
 if __name__ == '__main__':
     app.run(port=5555)
