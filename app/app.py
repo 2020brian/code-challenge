@@ -1,22 +1,15 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from models import db, Hero, Powers, HeroPowers
+# app/app.py
+from flask import Flask, render_template, jsonify, request
+from app import app, db
+from app.models import Hero, Powers, HeroPowers
 from sqlalchemy.orm import joinedload
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
+# Define your routes here
 
-# routes
-
-@app.route('/heroes', methods=['GET'])
-def get_heroes():
+@app.route('/')
+def index():
     heroes = Hero.query.all()
-    formatted_heroes = [
-        {"id": hero.id, "name": hero.name, "super_name": hero.super_name} for hero in heroes
-    ]
-    return jsonify(formatted_heroes)
+    return render_template('index.html', heroes=heroes)
 
 @app.route('/heroes/<int:hero_id>', methods=['GET'])
 def get_hero_by_id(hero_id):
@@ -35,15 +28,6 @@ def get_hero_by_id(hero_id):
     else:
         return jsonify({"error": "Hero not found"}), 404
 
-@app.route('/powers', methods=['GET'])
-def get_powers():
-    powers = Powers.query.all()
-    formatted_powers = [
-        {"id": power.id, "name": power.name, "description": power.description}
-        for power in powers
-    ]
-    return jsonify(formatted_powers)
-
 @app.route('/powers/<int:power_id>', methods=['GET'])
 def get_power_by_id(power_id):
     power = Powers.query.get(power_id)
@@ -54,6 +38,24 @@ def get_power_by_id(power_id):
             "description": power.description
         }
         return jsonify(formatted_power)
+    else:
+        return jsonify({"error": "Power not found"}), 404
+
+@app.route('/powers/<int:power_id>', methods=['PATCH'])
+def update_power(power_id):
+    power = Powers.query.get(power_id)
+    if power:
+        try:
+            data = request.get_json()
+            power.description = data.get('description', power.description)
+            db.session.commit()
+            return jsonify({
+                "id": power.id,
+                "name": power.name,
+                "description": power.description
+            })
+        except ValueError as e:
+            return jsonify({"errors": [str(e)]}), 400
     else:
         return jsonify({"error": "Power not found"}), 404
 
