@@ -50,4 +50,4 @@ class HeroPowers(db.Model):
         allowed_strengths = ['Strong', 'Weak', 'Average']
         if strength not in allowed_strengths:
             raise ValueError(f"Invalid strength value. Allowed values are {', '.join(allowed_strengths)}")
-        return 
+        return strength
