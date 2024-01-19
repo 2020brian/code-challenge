@@ -15,7 +15,8 @@ class Hero(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    
+    super_name = db.Column(db.String(255), nullable=False)
+
     # One-to-Many relationship with HeroPowers
     hero_powers = db.relationship('HeroPowers', back_populates='hero')
 
@@ -39,10 +40,10 @@ class HeroPowers(db.Model):
     __tablename__ = 'hero_powers'
 
     id = db.Column(db.Integer, primary_key=True)
+    strength = db.Column(db.String(10), nullable=False)
 
     hero_id = db.Column(db.Integer, db.ForeignKey('hero.id'))
     power_id = db.Column(db.Integer, db.ForeignKey('powers.id'))
-    strength = db.Column(db.String(10), nullable=False)
 
     # Define relationships
     hero = db.relationship('Hero', back_populates='hero_powers')
