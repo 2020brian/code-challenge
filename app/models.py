@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
-# Define the association table for the many-to-many relationship
+# association table
 hero_powers_association = db.Table(
     'hero_powers_association',
     db.Column('hero_id', db.Integer, db.ForeignKey('hero.id')),
@@ -16,8 +16,6 @@ class Hero(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     super_name = db.Column(db.String(255), nullable=False)
-
-    # One-to-Many relationship with HeroPowers
     hero_powers = db.relationship('HeroPowers', back_populates='hero')
 
 class Powers(db.Model):
@@ -26,8 +24,6 @@ class Powers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
-
-    # Many-to-Many relationship with HeroPowers
     hero_powers = db.relationship('HeroPowers', back_populates='power')
 
     @validates('description')
@@ -45,7 +41,7 @@ class HeroPowers(db.Model):
     hero_id = db.Column(db.Integer, db.ForeignKey('hero.id'))
     power_id = db.Column(db.Integer, db.ForeignKey('powers.id'))
 
-    # Define relationships
+    # relationships
     hero = db.relationship('Hero', back_populates='hero_powers')
     power = db.relationship('Powers', back_populates='hero_powers')
 
