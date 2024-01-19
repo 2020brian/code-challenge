@@ -1,10 +1,9 @@
-# app/app.py
 from flask import Flask, render_template, jsonify, request
 from app import app, db
 from app.models import Hero, Powers, HeroPowers
 from sqlalchemy.orm import joinedload
 
-# Define your routes here
+# Define routes
 
 @app.route('/')
 def index():
