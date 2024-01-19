@@ -100,7 +100,7 @@ def create_hero_power():
             ]
         }
 
-        return jsonify(formatted_hero), 201  # HTTP status code 201 indicates resource creation success
+        return jsonify(formatted_hero), 201 
     except ValueError as e:
         return jsonify({"errors": [str(e)]}), 400
 
