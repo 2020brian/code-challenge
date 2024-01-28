@@ -1,5 +1,5 @@
 # Flask Code Challenge - Superheroes
-link : https://2020brian.github.io/code-challenge/
+link : https://heroesbackend.onrender.com
 
 For this assessment, you'll be working on an API for tracking heroes and their
 superpowers.
