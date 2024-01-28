@@ -1,6 +1,7 @@
+from app.server import app
 from flask import Flask, render_template, jsonify, request
-from app import app, db
-from app.models import Hero, Powers, HeroPowers
+from app import db
+from app.server.models import Hero, Powers, HeroPowers
 from sqlalchemy.orm import joinedload
 
 # Define routes

@@ -8,6 +8,6 @@ function Header() {
       </h1>
     </header>
   );
-}
+}p
 
 export default Header;
